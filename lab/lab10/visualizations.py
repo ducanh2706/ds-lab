@@ -137,7 +137,15 @@ def make_displayed_rectangles(combinations):
             rectangles.append(rectangle_for_percentile(start_percentile, end_percentile, color))
         return rectangles
 
-    displays.append_column("rectangles", displays.apply(rectangles_for_percentage_range, ["start amount", "end amount", "color"]))
+    rects = [
+        rectangles_for_percentage_range(s, e, col)
+        for s, e, col in zip(
+            displays.column("start amount"),
+            displays.column("end amount"),
+            displays.column("color"),
+        )
+    ]
+    displays.append_column("rectangles", np.array(rects, dtype=object))
 
     return displays
 
